@@ -249,7 +249,7 @@ CURRENCY['BRL'] = Currency(code='BRL', numeric='986', decimals=2, symbol=u'R$', 
 CURRENCY['BSD'] = Currency(code='BSD', numeric='044', decimals=2, symbol=u'', name=u'Bahamian Dollar', countries=[u'BAHAMAS'])
 CURRENCY['BTN'] = Currency(code='BTN', numeric='064', decimals=2, symbol=u'', name=u'Ngultrum', countries=[u'BHUTAN'])
 CURRENCY['BWP'] = Currency(code='BWP', numeric='072', decimals=2, symbol=u'', name=u'Pula', countries=[u'BOTSWANA'])
-CURRENCY['BYR'] = Currency(code='BYR', numeric='974', decimals=0, symbol=u'', name=u'Belarussian Ruble', countries=[u'BELARUS'])
+CURRENCY['BYR'] = Currency(code='BYR', numeric='974', decimals=0, symbol=u'руб.', name=u'Belarusian Ruble', countries=[u'BELARUS'])
 CURRENCY['BZD'] = Currency(code='BZD', numeric='084', decimals=2, symbol=u'', name=u'Belize Dollar', countries=[u'BELIZE'])
 CURRENCY['CAD'] = Currency(code='CAD', numeric='124', decimals=2, symbol=u'$', name=u'Canadian Dollar', countries=[u'CANADA'])
 CURRENCY['CDF'] = Currency(code='CDF', numeric='976', decimals=2, symbol=u'', name=u'Congolese Franc', countries=[u'CONGO, THE DEMOCRATIC REPUBLIC OF'])
