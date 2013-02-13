@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from money.tests.models import TestMoneyModel, TestMoneyModel_0_USD, TestMoneyModel_USD
 from money.contrib.django.models.fields import NotSupportedLookup
-from money import Money, CURRENCY
+from money import Money, CURRENCY, set_default_currency
 
 
 class MoneyTestCase(TestCase):
@@ -14,8 +14,6 @@ class MoneyTestCase(TestCase):
         ten_bucks = Money(10, 'USD')
         a_hamilton = Money(10, 'USD')
 
-        juu_en = Money(10, 'JPY')
-
         nada = Money(0, 'USD')
 
         # Scalars cannot be compared to Money class
@@ -26,8 +24,36 @@ class MoneyTestCase(TestCase):
         # Money is equal to money of the same type
         self.assertTrue(ten_bucks == a_hamilton)
 
-        # But not different currencies
-        self.assertFalse(ten_bucks == juu_en)
+    def testComparison(self):
+        self.assertLess(Money(10, 'USD'), Money(12, 'USD'))
+        self.assertGreater(Money(10, 'USD'), Money(7, 'USD'))
+
+    def testConversion(self):
+        set_default_currency('USD')
+        # 1.3 USD = 1 EUR
+        CURRENCY['EUR'].set_exchange_rate(1.3)
+
+        self.assertEqual(Money(13, 'USD').convert_to(CURRENCY['EUR']), Money(10, 'EUR'))
+        self.assertEqual(Money(10, 'EUR').convert_to_default(), Money(13, 'USD'))
+
+    def testComparisonOfDifferentCurrencies(self):
+        """Different currencies can be compared if exchange rates are properly set."""
+
+        set_default_currency('USD')
+        # 1.3 USD = 1 EUR
+        CURRENCY['EUR'].set_exchange_rate(1.3)
+        # 1 USD = 8600 BYR
+        CURRENCY['BYR'].set_exchange_rate(1.0 / 8600)
+
+        # Compare default currency with another currency
+        self.assertEqual(Money(10, 'EUR'), Money(13, 'USD'))
+
+        self.assertLess(Money(10, 'EUR'), Money(14, 'USD'))
+        self.assertGreater(Money(10, 'EUR'), Money(12, 'USD'))
+
+        # Compare two non-default currencies
+        self.assertLess(Money(10, 'EUR'), Money(120000, 'BYR'))
+        self.assertLess(Money(100000, 'BYR'), Money(10, 'EUR'))
 
 
 class MoneyFieldTestCase(TestCase):

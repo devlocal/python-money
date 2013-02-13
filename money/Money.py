@@ -126,10 +126,7 @@ class Money:
         return Money(amount=self.amount * self.currency.exchange_rate, currency=DEFAULT_CURRENCY)
 
     def convert_to(self, currency):
-        """
-        Convert from one currency to another.
-        """
-        return None # TODO  (How??)
+        return Money(amount=self.amount * self.currency.exchange_rate / currency.exchange_rate, currency=currency)
 
     __radd__ = __add__
     __rsub__ = __sub__
@@ -141,7 +138,10 @@ class Money:
     #
     def __eq__(self, other):
         if isinstance(other, Money):
-            return (self.amount == other.amount) and (self.currency == other.currency)
+            if self.currency == other.currency:
+                return self.amount == other.amount
+            else:
+                return self.amount == other.convert_to(self.currency).amount
         # Allow comparison to 0
         if (other == 0) and (self.amount == 0):
             return True
@@ -158,7 +158,7 @@ class Money:
             if self.currency == other.currency:
                 return self.amount < other.amount
             else:
-                raise TypeError('can not compare different currencies')
+                return self.amount < other.convert_to(self.currency).amount
         else:
             return self.amount < Decimal(str(other))
 
@@ -167,7 +167,7 @@ class Money:
             if self.currency == other.currency:
                 return self.amount > other.amount
             else:
-                raise TypeError('can not compare different currencies')
+                return self.amount > other.convert_to(self.currency).amount
         else:
             return self.amount > Decimal(str(other))
 
